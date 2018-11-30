@@ -1,0 +1,16 @@
+{
+  "name": "grafiki",
+  "version": "0.0.1",
+  "description": "Graf similar to GunDB but in typescript.",
+  "main": "Grafiki.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Jajav33",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "@types/ws": "^6.0.1",
+    "typescript": "^3.1.6",
+    "ws": "^6.1.2"
+  }
+}
