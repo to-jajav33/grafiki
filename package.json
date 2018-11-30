@@ -1,0 +1,32 @@
+{
+  "name": "grafiki",
+  "version": "0.0.1",
+  "description": "Small API for making JSON circular references possible.",
+  "main": "src/Grafiki.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/to-jajav33/grafiki.git"
+  },
+  "keywords": [
+    "JSON",
+    "Circular",
+    "Reference",
+    "JSON"
+  ],
+  "author": "Jajav33",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/to-jajav33/grafiki/issues"
+  },
+  "homepage": "https://github.com/to-jajav33/grafiki#readme",
+  "devDependencies": {
+    "ts-node": "^7.0.1",
+    "typescript": "^3.2.1"
+  }
+}
