@@ -1,11 +1,12 @@
 
-import { GNodeRoot } from "./components/GNodeRoot";
+import { GNodeRoot, IGNodeRootOptions } from "./components/GNodeRoot";
 import * as MyWebSocket from 'ws';
 import { IGNodeOptions } from "./components/GNode";
 
-interface IGrafikiParams {
+export interface IGrafikiParams {
 	port ?: number,
-	nodeOptions : IGNodeOptions 
+	rootOptions ?: IGNodeRootOptions
+	nodeOptions ?: IGNodeOptions
 }
 
 interface IGrafikiOptions {
@@ -18,9 +19,11 @@ export class Grafiki extends GNodeRoot {
 	protected __grafikiOptions : IGrafikiOptions
 
 	constructor (paramOptions : IGrafikiParams = {nodeOptions : {root: undefined}}) {
+		paramOptions.nodeOptions = paramOptions.nodeOptions || {root: undefined};
 		paramOptions.nodeOptions.root = undefined;
+		const {nodeOptions, rootOptions} = paramOptions;
 
-		super(paramOptions.nodeOptions);
+		super({nodeOptions, rootOptions});
 
 		this.__options.root = this;
 		this.__grafikiOptions = {

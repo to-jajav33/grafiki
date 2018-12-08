@@ -9,11 +9,12 @@ class MyTest {
 			// let result = await this.testInitGrafiki();
 			// let result = await this.getInNode();
 			// let result = await this.putInNode();
-			let result = await this.getDataFromNode();
+			// let result = await this.getDataFromNode();
 
 			// let useTemplateLiteral = true;
 			// let result = await this.getDataFromNode(useTemplateLiteral);
 
+			let result = await this.perisistentDataPut();
 			return result;
 		} catch (e) {
 			console.group('error')
@@ -81,8 +82,16 @@ class MyTest {
 		return newRef;
 	}
 
-	async putInNode() {
-		let g = new Grafiki();
+	async perisistentDataPut () {
+		let g = new Grafiki({
+			// nodeOptions: {root: undefined},
+			rootOptions: {localStoragePath: 'persistent/path/to'}
+		})
+		return await this.putInNode(g);
+	}
+
+	async putInNode(g ?: Grafiki) {
+		g = g || new Grafiki();
 		let doggyRef = await g.ref('/dogs/doggie');
 		let jajav33Ref = await g.ref('/people/jajav33');
 
