@@ -11,7 +11,7 @@ class MyTest {
 			// let result = await this.putInNode();
 			// let result = await this.getDataFromNode();
 
-			// let useTemplateLiteral = true;
+			let useTemplateLiteral = true;
 			// let result = await this.getDataFromNode(useTemplateLiteral);
 
 			// let result = await this.perisistentDataPut();
