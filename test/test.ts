@@ -93,6 +93,26 @@ class MyTest {
 		return await this.putInNode(g);
 	}
 
+	async perisistentDataRead (useTemplateLiteral ?: boolean) {
+		let g = new Grafiki({
+			rootOptions: {localStoragePath: 'persistent/path/to'}
+		});
+
+		let jajav33Ref = await g.ref('/people/jajav33');
+
+		// let pathQuery = '/pets';
+		let pathQuery = '/';
+		if (useTemplateLiteral) {
+			pathQuery = `{
+				pets: {}
+			}`
+		}
+
+		let result = await jajav33Ref.getData(pathQuery);
+
+		return result;
+	}
+
 	async putInNode(g ?: Grafiki) {
 		g = g || new Grafiki();
 		let doggyRef = await g.ref('/dogs/doggie');
