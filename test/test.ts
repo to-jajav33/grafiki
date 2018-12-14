@@ -14,7 +14,10 @@ class MyTest {
 			// let useTemplateLiteral = true;
 			// let result = await this.getDataFromNode(useTemplateLiteral);
 
-			let result = await this.perisistentDataPut();
+			// let result = await this.perisistentDataPut();
+			let result = await this.perisistentDataRead(useTemplateLiteral);
+			// let result = await this.perisistentDataClear();
+
 			return result;
 		} catch (e) {
 			console.group('error')

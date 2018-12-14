@@ -304,6 +304,11 @@ export class GNode {
 					let gNodeToGetValFrom = this.root.worldNet.gNodes[branchNodeId];
 					let value;
 
+					// with persistent data, the gnode might not exists yet
+					if (!gNodeToGetValFrom) {
+						gNodeToGetValFrom = this.root.newNode(branchNodeId);
+					}
+
 					// only get values in the first level of the object... going deeper can lead to
 					// infinite loops from circular references.
 					// null is considered a type object
