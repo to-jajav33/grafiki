@@ -9,10 +9,14 @@ class MyTest {
 			// let result = await this.testInitGrafiki();
 			// let result = await this.getInNode();
 			// let result = await this.putInNode();
-			let result = await this.getDataFromNode();
+			// let result = await this.getDataFromNode();
 
-			// let useTemplateLiteral = true;
+			let useTemplateLiteral = true;
 			// let result = await this.getDataFromNode(useTemplateLiteral);
+
+			// let result = await this.perisistentDataPut();
+			let result = await this.perisistentDataRead(useTemplateLiteral);
+			// let result = await this.perisistentDataClear();
 
 			return result;
 		} catch (e) {
@@ -81,8 +85,36 @@ class MyTest {
 		return newRef;
 	}
 
-	async putInNode() {
-		let g = new Grafiki();
+	async perisistentDataPut () {
+		let g = new Grafiki({
+			// nodeOptions: {root: undefined},
+			rootOptions: {localStoragePath: 'persistent/path/to'}
+		})
+		return await this.putInNode(g);
+	}
+
+	async perisistentDataRead (useTemplateLiteral ?: boolean) {
+		let g = new Grafiki({
+			rootOptions: {localStoragePath: 'persistent/path/to'}
+		});
+
+		let jajav33Ref = await g.ref('/people/jajav33');
+
+		// let pathQuery = '/pets';
+		let pathQuery = '/';
+		if (useTemplateLiteral) {
+			pathQuery = `{
+				pets: {}
+			}`
+		}
+
+		let result = await jajav33Ref.getData(pathQuery);
+
+		return result;
+	}
+
+	async putInNode(g ?: Grafiki) {
+		g = g || new Grafiki();
 		let doggyRef = await g.ref('/dogs/doggie');
 		let jajav33Ref = await g.ref('/people/jajav33');
 

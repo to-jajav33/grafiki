@@ -22,7 +22,8 @@ export interface IGNodeData {
  * @interface IGNodeOptions
  */
 export interface IGNodeOptions {
-	root: GNodeRoot
+	root: GNodeRoot,
+	data ?: IGNodeData
 }
 
 /**
@@ -69,7 +70,7 @@ export class GNode {
 		this.__options = paramOptions;
 
 		// add defaults
-		this.__data = {
+		this.__data = paramOptions.data || {
 			branches: {},
 			value: undefined,
 			timestamp: Date.now(),
@@ -99,7 +100,7 @@ export class GNode {
 	 * @returns {Promise<GNode>} Returns itself
 	 * @memberof GNode
 	 */
-	async put(paramData: Array<object | boolean | GNode | number | null | string> | object | boolean | GNode | number | null | string): Promise<GNode> {
+	async put(paramData: Array<object | boolean | GNode | number | null | string | IGNodeData> | object | boolean | GNode | number | null | string | IGNodeData): Promise<GNode> {
 		try {
 			let objectArrayData;
 			if (paramData && (paramData instanceof GNode)) {
@@ -110,6 +111,8 @@ export class GNode {
 			} else if (paramData && (typeof paramData === 'object') || (Array.isArray(paramData))) {
 				objectArrayData = paramData;
 			}
+
+			let oldState;
 
 			if (objectArrayData && (typeof objectArrayData === 'object') || (Array.isArray(objectArrayData))) {
 				// ensure value is an object, so convert arrays to object
@@ -124,9 +127,18 @@ export class GNode {
 						newNode = paramData;
 					} else if (newObj[iPropName] instanceof GNode) {
 						newNode = newObj[iPropName];
+					} else if ((paramData as IGNodeData)) {
+						// if this an a data object of a GNode, lets create the gnode
+						newNode = this.root.newNode(paramData as IGNodeData)
+					} else if ((newObj[iPropName] as IGNodeData)) {
+						// if this an a data object of a GNode, lets create the gnode
+						newNode = this.root.newNode(newObj[iPropName] as IGNodeData)
 					} else {
 						newNode = this.root.newNode();
 					}
+
+					// store old state to compare for later.
+					oldState = JSON.stringify(this.__data);
 
 					/** @todo add an even that allows user to cancel write to node,
 					 *  or change values like in transactions. */
@@ -155,10 +167,19 @@ export class GNode {
 					nonArrayOrObjectVal = undefined;
 				}
 
+				// store old state to compare later.
+				oldState = JSON.stringify(this.__data);
+
 				/** @todo add an even that allows user to cancel write to node,
 				 *  or change values like in transactions. */
 	
 				this.__data.value = nonArrayOrObjectVal;
+			}
+	
+			// to save on persistent calles, just call if data changes.
+			let newState = JSON.stringify(this.__data);
+			if (oldState !== newState) {
+				this.root.savePersistentData();
 			}
 	
 			return this;
@@ -202,7 +223,7 @@ export class GNode {
 				let newGNode = this.root.newNode(branchNodeId);
 
 				// add the branch by referencing the branchNode id to the branchName
-				currGNode.__data.branches[branchName] = newGNode;
+				currGNode.__data.branches[branchName] = newGNode.nodeId;
 
 				// now have the new node cretae its own branches according to the length of the path.
 				if (restOfPathsArr && restOfPathsArr.length > 0) {
@@ -282,6 +303,11 @@ export class GNode {
 					let branchNodeId = this.data.branches[iPropName];
 					let gNodeToGetValFrom = this.root.worldNet.gNodes[branchNodeId];
 					let value;
+
+					// with persistent data, the gnode might not exists yet
+					if (!gNodeToGetValFrom) {
+						gNodeToGetValFrom = this.root.newNode(branchNodeId);
+					}
 
 					// only get values in the first level of the object... going deeper can lead to
 					// infinite loops from circular references.
