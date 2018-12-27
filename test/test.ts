@@ -11,12 +11,14 @@ class MyTest {
 			// let result = await this.putInNode();
 			// let result = await this.getDataFromNode();
 
-			let useTemplateLiteral = true;
+			// let useTemplateLiteral = true;
 			// let result = await this.getDataFromNode(useTemplateLiteral);
 
 			// let result = await this.perisistentDataPut();
-			let result = await this.perisistentDataRead(useTemplateLiteral);
+			// let result = await this.perisistentDataRead(useTemplateLiteral);
 			// let result = await this.perisistentDataClear();
+
+			let result = await this.passArrayIntoRef()
 
 			return result;
 		} catch (e) {
@@ -83,6 +85,17 @@ class MyTest {
 		let newRef = await g.ref('/new/path');
 
 		return newRef;
+	}
+
+	async passArrayIntoRef () {
+		let g = new Grafiki();
+
+		let result = [];
+		result.push(await g.ref(['test']));
+		result.push(await g.ref(['test', 'array']));
+		result.push(await g.ref(['test', 'array', 'path']));
+
+		return result;
 	}
 
 	async perisistentDataPut () {
