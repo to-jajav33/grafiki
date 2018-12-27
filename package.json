@@ -2,7 +2,8 @@
   "name": "grafiki",
   "version": "0.0.1",
   "description": "Small API for making JSON circular references possible.",
-  "main": "src/Grafiki.js",
+  "main": "build/Grafiki.js",
+  "types": "build/Grafiki.d.ts",
   "directories": {
     "test": "test"
   },
