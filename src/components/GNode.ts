@@ -198,7 +198,7 @@ export class GNode {
 	 */
 	async ref(paramPath: Array<string> | string): Promise<GNode> {
 		try {
-			let incomingPathArray: Array<string> = Array.isArray(Array) ? new Array(String(paramPath)).concat() : String(paramPath).split('/');
+			let incomingPathArray: Array<string> = Array.isArray(paramPath) ? paramPath.concat() : String(paramPath).split('/');
 			let currGNode: GNode = this;
 
 			if (typeof paramPath === 'string') {
