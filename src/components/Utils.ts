@@ -134,4 +134,16 @@ export class Utils {
 			throw e;
 		}
 	}
+	public static stringPathToArray (paramPath) {
+		let incomingPathArray: Array<string> = Array.isArray(paramPath) ? paramPath.concat() : String(paramPath).split('/');
+
+		// string splicing adds a blank string to the first index at times
+		for (let i in incomingPathArray) {
+			if (!incomingPathArray[i]) {
+				incomingPathArray.splice(0, 1);
+			}
+		}
+
+		return incomingPathArray;
+	}
 }
