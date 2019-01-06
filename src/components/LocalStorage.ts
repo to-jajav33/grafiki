@@ -44,14 +44,15 @@ export function createLocalStorage(options: LocalStoragePonyfillOptions = {}): I
     if (actualMode === "browser") {
         return globalAny.localStorage;
     } else if (actualMode === "node") {
-        const appRoot = '../tmp/localStorage/'; // require('app-root-path');
+        const appRoot = './tmp/localStorage/'; // require('app-root-path');
         const path = require("path");
         const LocalStorage = require('node-localstorage').LocalStorage;
         const defaultCacheDir = path.join(appRoot.toString(), ".cache");
-        if (!options.storeFilePath) {
-            mkDirPSync(defaultCacheDir);
-        }
-        const saveFilePath = options.storeFilePath ? options.storeFilePath : path.join(defaultCacheDir, "localstorage-ponyfill");
+        // if (!options.storeFilePath) {
+        //     mkDirPSync(defaultCacheDir);
+        // }
+        const saveFilePath = options.storeFilePath ? path.join(defaultCacheDir, options.storeFilePath) : path.join(defaultCacheDir, "localstorage-ponyfill");
+        mkDirPSync(saveFilePath);
         return new LocalStorage(saveFilePath);
 	}
 
