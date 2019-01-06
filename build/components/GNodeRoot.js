@@ -18,7 +18,7 @@ var GNodeRoot = /** @class */ (function (_super) {
     function GNodeRoot(params) {
         var _this = this;
         var nodeOptions = (params) ? params.nodeOptions : undefined;
-        var rootOptions = params ? params.rootOptions : {};
+        var rootOptions = params ? params.rootOptions || {} : {};
         var localStoragePath = rootOptions.localStoragePath;
         var isPersistent = !!localStoragePath;
         var localStorageInst = LocalStorage_1.createLocalStorage();

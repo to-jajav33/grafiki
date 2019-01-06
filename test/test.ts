@@ -48,12 +48,14 @@ class MyTest {
 			// let result = await this.getInNode();
 			// let result = await this.putInNode();
 
-			let useTemplateLiteral;
-			let shouldReturnPath; // either return path with value, or just value
-			let testPathMode;
+			let useTemplateLiteral : boolean;
+			let shouldReturnPath : boolean; // either return path with value, or just value
+			let testPathMode : string;
+
 			// useTemplateLiteral = false;
 
-			// shouldReturnPath = false; 
+			// shouldReturnPath = false;
+
 			// testPathMode = TEST_PATH_MODES.ROOT;
 			// let result = await this.getDataFromNode({useTemplateLiteral, shouldReturnPath, testPathMode});
 			// testPathMode = TEST_PATH_MODES.ONE_LEVEL;
@@ -66,6 +68,7 @@ class MyTest {
 			// let result = await this.getDataFromNode({useTemplateLiteral, shouldReturnPath, testPathMode});
 
 			// shouldReturnPath = true;
+
 			// testPathMode = TEST_PATH_MODES.ROOT;
 			// let result = await this.getDataFromNode({useTemplateLiteral, shouldReturnPath, testPathMode});
 			testPathMode = TEST_PATH_MODES.ONE_LEVEL;
@@ -77,9 +80,10 @@ class MyTest {
 			// testPathMode = TEST_PATH_MODES.THREE_LEVELS_SINGLE_ATTR;
 			// let result = await this.getDataFromNode({useTemplateLiteral, shouldReturnPath, testPathMode});
 
-			useTemplateLiteral = true;
+			// useTemplateLiteral = true;
 
 			// shouldReturnPath = false;
+
 			// testPathMode = TEST_PATH_MODES.ROOT;
 			// let result = await this.getDataFromNode({useTemplateLiteral, shouldReturnPath, testPathMode});
 			// testPathMode = TEST_PATH_MODES.ONE_LEVEL;
@@ -91,7 +95,8 @@ class MyTest {
 			// testPathMode = TEST_PATH_MODES.THREE_LEVELS_SINGLE_ATTR;
 			// let result = await this.getDataFromNode({useTemplateLiteral, shouldReturnPath, testPathMode});
 
-			shouldReturnPath = true;
+			// shouldReturnPath = true;
+
 			// testPathMode = TEST_PATH_MODES.ROOT;
 			// let result = await this.getDataFromNode({useTemplateLiteral, shouldReturnPath, testPathMode});
 			// testPathMode = TEST_PATH_MODES.ONE_LEVEL;
@@ -106,6 +111,8 @@ class MyTest {
 			// let result = await this.perisistentDataClear();
 			// let result = await this.perisistentDataPut();
 			// let result = await this.perisistentDataRead(useTemplateLiteral);
+
+			// let result = await this.passArrayIntoRef()
 
 			return result;
 		} catch (e) {
@@ -212,6 +219,17 @@ class MyTest {
 
 	async perisistentDataClear () {
 		createLocalStorage({storeFilePath: 'persistent/path/to'}).clear();
+	}
+
+	async passArrayIntoRef () {
+		let g = new Grafiki();
+
+		let result = [];
+		result.push(await g.ref(['test']));
+		result.push(await g.ref(['test', 'array']));
+		result.push(await g.ref(['test', 'array', 'path']));
+
+		return result;
 	}
 
 	async perisistentDataPut () {

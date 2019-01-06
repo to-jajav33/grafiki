@@ -235,7 +235,7 @@ var GNode = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 4, , 5]);
-                        incomingPathArray = Array.isArray(Array) ? new Array(String(paramPath)).concat() : String(paramPath).split('/');
+                        incomingPathArray = Array.isArray(paramPath) ? paramPath.concat() : String(paramPath).split('/');
                         currGNode = this;
                         if (typeof paramPath === 'string') {
                             // string splicing adds a blank string to the first index at times
