@@ -1,4 +1,5 @@
 import { Grafiki } from "../src/Grafiki";
+import { createLocalStorage } from "../src/components/LocalStorage";
 
 const TEST_PATH_MODES = {
 	ROOT: 'ROOT',
@@ -207,6 +208,10 @@ class MyTest {
 		let newRef = await g.ref('/new/path');
 
 		return newRef;
+	}
+
+	async perisistentDataClear () {
+		createLocalStorage({storeFilePath: 'persistent/path/to'}).clear();
 	}
 
 	async perisistentDataPut () {
