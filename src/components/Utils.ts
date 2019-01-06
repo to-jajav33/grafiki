@@ -134,6 +134,15 @@ export class Utils {
 			throw e;
 		}
 	}
+
+	public static escapeRegExp(str) {
+		return str.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
+	}
+
+	public static replaceAll (str, find, replace) {
+		return str.replace(new RegExp(Utils.escapeRegExp(find), 'g'), replace);
+	}
+
 	public static stringPathToArray (paramPath) {
 		let incomingPathArray: Array<string> = Array.isArray(paramPath) ? paramPath.concat() : String(paramPath).split('/');
 
