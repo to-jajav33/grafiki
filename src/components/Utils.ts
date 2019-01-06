@@ -87,7 +87,7 @@ export class Utils {
 			// Strip insignificant whitespace
 			// Note that this could do a lot more, such as reorder fields etc.
 			// normalize
-			rawString = rawString.replace(/[\s,]+/g, ' ').trim()
+			rawString = rawString.replace(/[\s]+/g, ' ').trim()
 
 			let pathsArr = Utils.handleCreatePaths(Utils.convertStrToObj(rawString)) as Array<Array<string>>;
 
