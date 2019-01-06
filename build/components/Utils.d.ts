@@ -13,4 +13,7 @@ export declare class Utils {
     static handleCreatePaths(object: any): Array<any>;
     static literalToPathsArr(strings: any, ...listOfExps: any[]): Array<Array<string>>;
     static quicksortBasic(array: Array<any>, sortCb?: Function): any;
+    static escapeRegExp(str: any): any;
+    static replaceAll(str: any, find: any, replace: any): any;
+    static stringPathToArray(paramPath: any): string[];
 }

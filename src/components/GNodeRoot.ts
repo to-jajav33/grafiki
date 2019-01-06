@@ -47,10 +47,16 @@ export class GNodeRoot extends GNode {
 	constructor (params : IGNodeRootParams) {
 		const nodeOptions : IGNodeOptions = (params) ? params.nodeOptions : undefined;
 		const rootOptions : IGNodeRootOptions = params ? params.rootOptions || {} as IGNodeRootOptions : {} as IGNodeRootOptions;
-		const {localStoragePath} = rootOptions;
+		let {localStoragePath} = rootOptions;
 
 		const isPersistent = !!localStoragePath;
-		const localStorageInst = createLocalStorage();
+		if (isPersistent && localStoragePath.startsWith('/')) {
+			localStoragePath = '.' + localStoragePath;
+		} else if (isPersistent && !localStoragePath.startsWith('./')) {
+			localStoragePath = './' + localStoragePath;
+		}
+
+		const localStorageInst = (isPersistent) ? createLocalStorage({storeFilePath: localStoragePath}) : undefined;
 
 		// load persistent data into the root node if it exists.
 		if (isPersistent) {

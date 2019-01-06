@@ -20,14 +20,15 @@ function createLocalStorage(options) {
         return globalAny.localStorage;
     }
     else if (actualMode === "node") {
-        var appRoot = '../tmp/localStorage/'; // require('app-root-path');
+        var appRoot = './tmp/localStorage/'; // require('app-root-path');
         var path = require("path");
         var LocalStorage = require('node-localstorage').LocalStorage;
         var defaultCacheDir = path.join(appRoot.toString(), ".cache");
-        if (!options.storeFilePath) {
-            mkdirp_1.mkDirPSync(defaultCacheDir);
-        }
-        var saveFilePath = options.storeFilePath ? options.storeFilePath : path.join(defaultCacheDir, "localstorage-ponyfill");
+        // if (!options.storeFilePath) {
+        //     mkDirPSync(defaultCacheDir);
+        // }
+        var saveFilePath = options.storeFilePath ? path.join(defaultCacheDir, options.storeFilePath) : path.join(defaultCacheDir, "localstorage-ponyfill");
+        mkdirp_1.mkDirPSync(saveFilePath);
         return new LocalStorage(saveFilePath);
     }
     throw new Error("Unknown mode:" + actualMode);

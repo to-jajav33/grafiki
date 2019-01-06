@@ -87,7 +87,7 @@ export class Utils {
 			// Strip insignificant whitespace
 			// Note that this could do a lot more, such as reorder fields etc.
 			// normalize
-			rawString = rawString.replace(/[\s,]+/g, ' ').trim()
+			rawString = rawString.replace(/[\s]+/g, ' ').trim()
 
 			let pathsArr = Utils.handleCreatePaths(Utils.convertStrToObj(rawString)) as Array<Array<string>>;
 
@@ -133,5 +133,26 @@ export class Utils {
 		} catch (e) {
 			throw e;
 		}
+	}
+
+	public static escapeRegExp(str) {
+		return str.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
+	}
+
+	public static replaceAll (str, find, replace) {
+		return str.replace(new RegExp(Utils.escapeRegExp(find), 'g'), replace);
+	}
+
+	public static stringPathToArray (paramPath) {
+		let incomingPathArray: Array<string> = Array.isArray(paramPath) ? paramPath.concat() : String(paramPath).split('/');
+
+		// string splicing adds a blank string to the first index at times
+		for (let i in incomingPathArray) {
+			if (!incomingPathArray[i]) {
+				incomingPathArray.splice(0, 1);
+			}
+		}
+
+		return incomingPathArray;
 	}
 }
