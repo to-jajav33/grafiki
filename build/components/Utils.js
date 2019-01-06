@@ -77,7 +77,7 @@ var Utils = /** @class */ (function () {
             // Strip insignificant whitespace
             // Note that this could do a lot more, such as reorder fields etc.
             // normalize
-            rawString = rawString.replace(/[\s,]+/g, ' ').trim();
+            rawString = rawString.replace(/[\s]+/g, ' ').trim();
             var pathsArr = Utils.handleCreatePaths(Utils.convertStrToObj(rawString));
             return pathsArr;
         }
@@ -120,6 +120,22 @@ var Utils = /** @class */ (function () {
         catch (e) {
             throw e;
         }
+    };
+    Utils.escapeRegExp = function (str) {
+        return str.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
+    };
+    Utils.replaceAll = function (str, find, replace) {
+        return str.replace(new RegExp(Utils.escapeRegExp(find), 'g'), replace);
+    };
+    Utils.stringPathToArray = function (paramPath) {
+        var incomingPathArray = Array.isArray(paramPath) ? paramPath.concat() : String(paramPath).split('/');
+        // string splicing adds a blank string to the first index at times
+        for (var i in incomingPathArray) {
+            if (!incomingPathArray[i]) {
+                incomingPathArray.splice(0, 1);
+            }
+        }
+        return incomingPathArray;
     };
     return Utils;
 }());

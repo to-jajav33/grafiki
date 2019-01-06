@@ -41,6 +41,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var GUID_NODES_1 = require("./GUID_NODES");
 var Utils_1 = require("./Utils");
+var GDataResponse_1 = require("./GDataResponse");
 /**
  * Node in the graph system.
  *
@@ -225,27 +226,21 @@ var GNode = /** @class */ (function () {
      *
      *
      * @param {(Array<string>|string)} paramPath Path is relative to this GNode instance
+     * @param {IRefOptions} [options]
      * @returns {Promise<GNode>} The GNode at given path. New Gnode are created if path does not exist.
      * @memberof GNode
      */
-    GNode.prototype.ref = function (paramPath) {
+    GNode.prototype.ref = function (paramPath, options) {
         return __awaiter(this, void 0, void 0, function () {
-            var incomingPathArray, currGNode, i, firstPathName, restOfPathsArr, branchName, branchNodeId, newGNode, e_2;
+            var currGNode, incomingPathArray, pathRef, firstPathName, restOfPathsArr, branchName, branchNodeId, newGNode, e_2;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 4, , 5]);
-                        incomingPathArray = Array.isArray(paramPath) ? paramPath.concat() : String(paramPath).split('/');
                         currGNode = this;
-                        if (typeof paramPath === 'string') {
-                            // string splicing adds a blank string to the first index at times
-                            for (i in incomingPathArray) {
-                                if (!incomingPathArray[i]) {
-                                    incomingPathArray.splice(0, 1);
-                                }
-                            }
-                        }
+                        incomingPathArray = Utils_1.Utils.stringPathToArray(paramPath);
                         if (!(incomingPathArray.length > 0)) return [3 /*break*/, 3];
+                        pathRef = (options || {}).pathRef;
                         firstPathName = incomingPathArray[0], restOfPathsArr = incomingPathArray.slice(1);
                         branchName = firstPathName;
                         branchNodeId = currGNode.__data.branches ? currGNode.__data.branches[branchName] : undefined;
@@ -256,8 +251,19 @@ var GNode = /** @class */ (function () {
                         newGNode = this.root.newNode(branchNodeId);
                         // add the branch by referencing the branchNode id to the branchName
                         currGNode.__data.branches[branchName] = newGNode.nodeId;
+                        // pathRef tracks the path traveled, only create it if has not been created.
+                        // will be overwritten by data if data exists in getData()
+                        if (pathRef && typeof pathRef === 'object') {
+                            if (!pathRef[branchName]) {
+                                pathRef[branchName] = {};
+                            }
+                        }
                         if (!(restOfPathsArr && restOfPathsArr.length > 0)) return [3 /*break*/, 2];
-                        return [4 /*yield*/, newGNode.ref(restOfPathsArr)];
+                        // pass the pathRef to keep track of the path traveled.
+                        if (options) {
+                            options.pathRef = (pathRef && typeof pathRef === 'object') ? pathRef[branchName] : undefined;
+                        }
+                        return [4 /*yield*/, newGNode.ref(restOfPathsArr, options)];
                     case 1:
                         currGNode = _a.sent();
                         return [3 /*break*/, 3];
@@ -280,39 +286,56 @@ var GNode = /** @class */ (function () {
      * can use template literals as well, ie: getData(`{}`)
      *
      * @param {string} pathLiteal
-     * @param {IGetDataOptions} [options]
      * @returns
      * @memberof GNode
      */
-    GNode.prototype.getData = function (pathLiteal, options) {
+    GNode.prototype.getData = function (pathLiteal) {
         return __awaiter(this, void 0, void 0, function () {
-            var pathsArr, data, iPath, ref, path, _a, e_3;
+            var pathsArr, data, rootRef, pathsArrLength, iPath, ref, pathStr, lastPath, currPathArr, pathRef, refOptions, _a, derefData, tempData, response, e_3;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
                         _b.trys.push([0, 8, , 9]);
                         pathsArr = void 0;
                         data = void 0;
-                        if (pathLiteal.trim().startsWith('{')) {
+                        rootRef = void 0;
+                        if ((typeof pathLiteal === 'string') && (pathLiteal.trim().startsWith('{'))) {
                             pathsArr = Utils_1.Utils.literalToPathsArr(templateObject_1 || (templateObject_1 = __makeTemplateObject(["", ""], ["", ""])), pathLiteal);
                         }
-                        else {
+                        else if (typeof pathLiteal === 'string') {
                             pathsArr = [[pathLiteal]];
+                        }
+                        else if (pathLiteal === undefined || pathLiteal === null) {
+                            pathsArr = [['/']];
+                        }
+                        else if (Array.isArray(pathLiteal)) {
+                            pathsArr = pathLiteal;
+                        }
+                        pathsArrLength = pathsArr.length;
+                        if (pathsArrLength > 0) {
+                            rootRef = {};
                         }
                         iPath = 0;
                         _b.label = 1;
                     case 1:
-                        if (!(iPath < pathsArr.length)) return [3 /*break*/, 7];
+                        if (!(iPath < pathsArrLength)) return [3 /*break*/, 7];
                         ref = void 0;
-                        path = void 0;
+                        pathStr = void 0;
+                        lastPath = void 0;
+                        currPathArr = void 0;
+                        pathRef = rootRef;
+                        // convert the incoming path to an array type path.
                         // eslint-disable-next-line
-                        pathsArr[iPath] = pathsArr[iPath];
-                        path = pathsArr[iPath].join('/');
-                        if (path.startsWith('/')) {
-                            path = path.replace('/', '');
+                        pathStr = (Array.isArray(pathsArr[iPath])) ? pathsArr[iPath].join('/') : pathsArr[iPath];
+                        if (pathStr.startsWith('/')) {
+                            pathStr = pathStr.replace('/', '');
                         }
-                        if (!(path)) return [3 /*break*/, 3];
-                        return [4 /*yield*/, this.ref(path)];
+                        currPathArr = Utils_1.Utils.stringPathToArray(pathStr);
+                        // lastPath is used for storing data for GDataResponse
+                        lastPath = (currPathArr.length > 0) ? currPathArr[currPathArr.length - 1] : undefined;
+                        refOptions = { pathRef: pathRef };
+                        if (!(currPathArr.length > 0)) return [3 /*break*/, 3];
+                        return [4 /*yield*/, this.ref(currPathArr, refOptions)];
                     case 2:
                         _a = _b.sent();
                         return [3 /*break*/, 4];
@@ -320,15 +343,37 @@ var GNode = /** @class */ (function () {
                         _a = this;
                         _b.label = 4;
                     case 4:
+                        // get the last ref, and refOptions.pathRef will change to the second to last path.
                         ref = _a;
                         return [4 /*yield*/, ref.val()];
                     case 5:
                         data = _b.sent();
+                        derefData = (data && typeof data === 'object') ? JSON.parse(JSON.stringify(data)) : data;
+                        // if requesting for just this node's value, assign the data to pathRef itself.
+                        if (lastPath) {
+                            lastPath = Utils_1.Utils.replaceAll(lastPath, '/', '');
+                        }
+                        // if there is no last path, this is root.
+                        if (!lastPath) {
+                            rootRef = derefData;
+                        }
+                        else {
+                            refOptions.pathRef[lastPath] = derefData;
+                        }
                         _b.label = 6;
                     case 6:
                         iPath++;
                         return [3 /*break*/, 1];
-                    case 7: return [2 /*return*/, data];
+                    case 7:
+                        tempData = void 0;
+                        if (Array.isArray(pathLiteal)) {
+                            tempData = rootRef;
+                        }
+                        else {
+                            tempData = data;
+                        }
+                        response = new GDataResponse_1.GDataResponse({ pathRef: rootRef, data: tempData });
+                        return [2 /*return*/, response];
                     case 8:
                         e_3 = _b.sent();
                         throw e_3;
@@ -352,28 +397,39 @@ var GNode = /** @class */ (function () {
      */
     GNode.prototype.val = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var outObj, iPropName, branchNodeId, gNodeToGetValFrom, value;
+            var outObj, iPropName;
             return __generator(this, function (_a) {
                 try {
                     if ((this.data.value === undefined || this.data.value === null) && (Object.keys(this.data.branches).length > 0)) {
                         outObj = {};
+                        /** @todo add no levels when we add queries. Queries will be a parameter that is passed in and determines what to return
+                        * for now we just need to see the same level values */
+                        // no levels into branches, must query for each individual branch.
+                        // ... return just the keys
+                        // same level branches
                         for (iPropName in this.data.branches) {
-                            branchNodeId = this.data.branches[iPropName];
-                            gNodeToGetValFrom = this.root.worldNet.gNodes[branchNodeId];
-                            value = void 0;
-                            // with persistent data, the gnode might not exists yet
-                            if (!gNodeToGetValFrom) {
-                                gNodeToGetValFrom = this.root.newNode(branchNodeId);
-                            }
-                            // only get values in the first level of the object... going deeper can lead to
-                            // infinite loops from circular references.
-                            // null is considered a type object
-                            value = gNodeToGetValFrom.data.value;
-                            if ((Object.keys(gNodeToGetValFrom.data.branches).length > 0) && ((value === undefined) || (value === null))) {
-                                value = JSON.parse(JSON.stringify(gNodeToGetValFrom.data.branches));
-                            }
-                            outObj[iPropName] = value;
+                            outObj[iPropName] = null;
                         }
+                        // or return just the keys
+                        // outObj = Object.keys(this.data.branches);
+                        // one levels into branches
+                        // for (let iPropName in this.data.branches) {
+                        // 	let branchNodeId = this.data.branches[iPropName];
+                        // 	let gNodeToGetValFrom = this.root.worldNet.gNodes[branchNodeId];
+                        // 	let value;
+                        // 	// with persistent data, the gnode might not exists yet
+                        // 	if (!gNodeToGetValFrom) {
+                        // 		gNodeToGetValFrom = this.root.newNode(branchNodeId);
+                        // 	}
+                        // 	// only get values in the first level of the object... going deeper can lead to
+                        // 	// infinite loops from circular references.
+                        // 	// null is considered a type object
+                        // 	value = gNodeToGetValFrom.data.value;
+                        // 	if ((Object.keys(gNodeToGetValFrom.data.branches).length > 0) && ((value === undefined) || (value === null))) {
+                        // 		value = JSON.parse(JSON.stringify(gNodeToGetValFrom.data.branches));
+                        // 	}
+                        // 	outObj[iPropName] = value;
+                        // }
                         return [2 /*return*/, outObj];
                     }
                     else {

@@ -1,4 +1,5 @@
 import { GNodeRoot } from "./GNodeRoot";
+import { GDataResponse } from "./GDataResponse";
 /**
  * Interface representing the data found in GNode
  *
@@ -24,9 +25,10 @@ export interface IGNodeOptions {
 /**
  * Interface representing parameter options passed in for GNode.getData();
  *
- * @interface IGetDataOptions
+ * @interface IRefOptions
  */
-interface IGetDataOptions {
+interface IRefOptions {
+    pathRef?: object | null | undefined;
 }
 /**
  * Node in the graph system.
@@ -66,10 +68,11 @@ export declare class GNode {
      *
      *
      * @param {(Array<string>|string)} paramPath Path is relative to this GNode instance
+     * @param {IRefOptions} [options]
      * @returns {Promise<GNode>} The GNode at given path. New Gnode are created if path does not exist.
      * @memberof GNode
      */
-    ref(paramPath: Array<string> | string): Promise<GNode>;
+    ref(paramPath: Array<string> | string, options?: IRefOptions): Promise<GNode>;
     /**
      * Get the data from any path starting at this reference.
      * calling getData('/') is the same as calling val()
@@ -77,11 +80,10 @@ export declare class GNode {
      * can use template literals as well, ie: getData(`{}`)
      *
      * @param {string} pathLiteal
-     * @param {IGetDataOptions} [options]
      * @returns
      * @memberof GNode
      */
-    getData(pathLiteal: string, options?: IGetDataOptions): Promise<any>;
+    getData(pathLiteal: string | Array<string>): Promise<GDataResponse>;
     /**
      * Get the value of a node.data.value or node.data.branches[i] if there is no value for the node.
      * If the branches does not have a value defined, it will return

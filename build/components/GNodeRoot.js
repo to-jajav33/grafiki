@@ -21,7 +21,13 @@ var GNodeRoot = /** @class */ (function (_super) {
         var rootOptions = params ? params.rootOptions || {} : {};
         var localStoragePath = rootOptions.localStoragePath;
         var isPersistent = !!localStoragePath;
-        var localStorageInst = LocalStorage_1.createLocalStorage();
+        if (isPersistent && localStoragePath.startsWith('/')) {
+            localStoragePath = '.' + localStoragePath;
+        }
+        else if (isPersistent && !localStoragePath.startsWith('./')) {
+            localStoragePath = './' + localStoragePath;
+        }
+        var localStorageInst = (isPersistent) ? LocalStorage_1.createLocalStorage({ storeFilePath: localStoragePath }) : undefined;
         // load persistent data into the root node if it exists.
         if (isPersistent) {
             var keyPath = KEY_PATH_ROOT + localStoragePath;
