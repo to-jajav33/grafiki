@@ -2,6 +2,7 @@ import { GNodeRoot } from "./GNodeRoot";
 import { GUID_NODES } from "./GUID_NODES";
 import { Utils } from "./Utils";
 import { GDataResponse, IGDataResponseOptions } from "./GDataResponse";
+import { GDataQuery } from "./GDataQuery";
 
 /**
  * Interface representing the data found in GNode
@@ -33,16 +34,6 @@ export interface IGNodeOptions {
  * @interface IRefOptions
  */
 interface IRefOptions {
-	pathRef ?: object | null | undefined
-}
-
-/**
- * Interface representing parameter options passed in for GNode.getData();
- *
- * @interface IGDataOptions
- */
-interface IGDataOptions {
-	response ?: GDataResponse,
 	pathRef ?: object | null | undefined
 }
 
@@ -163,7 +154,7 @@ export class GNode {
 
 					// now that the new value for the node has been saved, create the branch to activate sorting, and have
 					// reference to the new node.
-					this.__data.branches[iPropName] = newNode.__data.nodeId;
+					this.__data.branches[iPropName] = newNode.nodeId;
 				}
 			} else {
 				let nonArrayOrObjectVal: boolean | null | number | string | undefined;
@@ -220,7 +211,11 @@ export class GNode {
 				let {pathRef} = options || {} as IRefOptions;
 
 				const [firstPathName, ...restOfPathsArr] = incomingPathArray;
-				let branchName = firstPathName;
+				let branchName = firstPathName.replace(/ *\([^)]*\) */g, "");
+
+				if (!branchName) {
+					return currGNode;
+				}
 
 				let branchNodeId = currGNode.__data.branches ? currGNode.__data.branches[branchName] : undefined;
 				if (!branchNodeId) {
@@ -293,10 +288,11 @@ export class GNode {
 			}
 
 			for (let iPath = 0; iPath < pathsArrLength; iPath++) {
-				let ref;
+				let ref : GNode;
 				let pathStr;
 				let lastPath;
 				let currPathArr;
+				let lastPathQuery;
 
 				// reset to rootRef to restart the path.
 				let pathRef = rootRef;
@@ -309,7 +305,8 @@ export class GNode {
 				}
 				currPathArr = Utils.stringPathToArray(pathStr);
 				// lastPath is used for storing data for GDataResponse
-				lastPath = (currPathArr.length > 0) ? currPathArr[currPathArr.length - 1] : undefined;
+				lastPathQuery = (currPathArr.length > 0) ? currPathArr[currPathArr.length - 1] : '/';
+				lastPath = (currPathArr.length > 0) ? lastPathQuery.replace(/ *\([^)]*\) */g, "") : '';
 
 				// pass in refOptions to ref. This can be done with a for loop here, but more 
 				// optimized if we use ref since its already for looping through the paths.
@@ -317,7 +314,7 @@ export class GNode {
 
 				// get the last ref, and refOptions.pathRef will change to the second to last path.
 				ref = (currPathArr.length > 0) ? await this.ref(currPathArr, refOptions) : this;
-				data = await ref.val();
+				data = await ref.val(currPathArr[currPathArr.length - 1] || '');
 
 				// if value is a object, lets deref it so we don't actually change it by reference.
 				let derefData = (data && typeof data === 'object') ? JSON.parse(JSON.stringify(data)) : data;
@@ -365,49 +362,10 @@ export class GNode {
 	 * @returns {Promise<boolean|undefined|null|number|string|object>}
 	 * @memberof GNode
 	 */
-	public async val(): Promise<boolean | undefined | null | number | string | object> {
+	public async val(paramQueryStr ?: string) : Promise<boolean | undefined | null | number | string | object> {
 		try {
-			if ((this.data.value === undefined || this.data.value === null) && (Object.keys(this.data.branches).length > 0)) {
-				let outObj = {};
-
-				/** @todo add no levels when we add queries. Queries will be a parameter that is passed in and determines what to return
-				* for now we just need to see the same level values */
-				// no levels into branches, must query for each individual branch.
-				// ... return just the keys
-
-				// same level branches
-				for (let iPropName in this.data.branches) {
-					outObj[iPropName] = null;
-				}
-				// or return just the keys
-				// outObj = Object.keys(this.data.branches);
-
-				// one levels into branches
-				// for (let iPropName in this.data.branches) {
-				// 	let branchNodeId = this.data.branches[iPropName];
-				// 	let gNodeToGetValFrom = this.root.worldNet.gNodes[branchNodeId];
-				// 	let value;
-
-				// 	// with persistent data, the gnode might not exists yet
-				// 	if (!gNodeToGetValFrom) {
-				// 		gNodeToGetValFrom = this.root.newNode(branchNodeId);
-				// 	}
-
-				// 	// only get values in the first level of the object... going deeper can lead to
-				// 	// infinite loops from circular references.
-				// 	// null is considered a type object
-				// 	value = gNodeToGetValFrom.data.value;
-				// 	if ((Object.keys(gNodeToGetValFrom.data.branches).length > 0) && ((value === undefined) || (value === null))) {
-				// 		value = JSON.parse(JSON.stringify(gNodeToGetValFrom.data.branches));
-				// 	}
-
-				// 	outObj[iPropName] = value;
-				// }
-
-				return outObj;
-			} else {
-				return this.data.value;
-			}
+			let gdataQuery = new GDataQuery();
+			return await gdataQuery.query(paramQueryStr, this.data);
 		} catch (e) {
 			throw e;
 		}
