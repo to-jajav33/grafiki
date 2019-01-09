@@ -1,5 +1,6 @@
 import { Grafiki } from "../src/Grafiki";
 import { createLocalStorage } from "../src/components/LocalStorage";
+import { GNode } from "../src/components/GNode";
 
 const TEST_PATH_MODES = {
 	ROOT: 'ROOT',
@@ -7,15 +8,15 @@ const TEST_PATH_MODES = {
 	TWO_LEVELS: 'TWO_LEVEL',
 	THREE_LEVELS_MULTI_ATTR: 'THREE_LEVEL',
 	THREE_LEVELS_SINGLE_ATTR: 'THREE_LEVEL_SINGLE_ATTR'
-}
+};
 
 class MyTest {
 	constructor() {
 	}
 
 	async _addData (paramGNode) {
-		let doggyRef = await paramGNode.ref('/dogs/doggie');
-		let jajav33Ref = await paramGNode.ref('/people/jajav33');
+		let doggyRef : GNode = await paramGNode.ref('/dogs/doggie');
+		let jajav33Ref : GNode = await paramGNode.ref('/people/jajav33');
 
 		await doggyRef.put({
 			name: 'doggie',
@@ -52,33 +53,43 @@ class MyTest {
 			let shouldReturnPath : boolean; // either return path with value, or just value
 			let testPathMode : string;
 
-			// useTemplateLiteral = false;
+			useTemplateLiteral = false;
 
-			// shouldReturnPath = false;
+			shouldReturnPath = false;
 
 			// testPathMode = TEST_PATH_MODES.ROOT;
 			// let result = await this.getDataFromNode({useTemplateLiteral, shouldReturnPath, testPathMode});
+			// let result = await this.getDataFromNode({useTemplateLiteral, shouldReturnPath, testPathMode, shouldAddQuery: true});
 			// testPathMode = TEST_PATH_MODES.ONE_LEVEL;
 			// let result = await this.getDataFromNode({useTemplateLiteral, shouldReturnPath, testPathMode});
+			// let result = await this.getDataFromNode({useTemplateLiteral, shouldReturnPath, testPathMode, shouldAddQuery: true});
 			// testPathMode = TEST_PATH_MODES.TWO_LEVELS;
 			// let result = await this.getDataFromNode({useTemplateLiteral, shouldReturnPath, testPathMode});
-			// testPathMode = TEST_PATH_MODES.THREE_LEVELS_MULTI_ATTR;
-			// let result = await this.getDataFromNode({useTemplateLiteral, shouldReturnPath, testPathMode});
+			// let result = await this.getDataFromNode({useTemplateLiteral, shouldReturnPath, testPathMode, shouldAddQuery: true});
+			testPathMode = TEST_PATH_MODES.THREE_LEVELS_MULTI_ATTR;
+			let result = await this.getDataFromNode({useTemplateLiteral, shouldReturnPath, testPathMode});
+			// let result = await this.getDataFromNode({useTemplateLiteral, shouldReturnPath, testPathMode, shouldAddQuery: true});
 			// testPathMode = TEST_PATH_MODES.THREE_LEVELS_SINGLE_ATTR;
 			// let result = await this.getDataFromNode({useTemplateLiteral, shouldReturnPath, testPathMode});
+			// let result = await this.getDataFromNode({useTemplateLiteral, shouldReturnPath, testPathMode, shouldAddQuery: true});
 
 			// shouldReturnPath = true;
 
 			// testPathMode = TEST_PATH_MODES.ROOT;
 			// let result = await this.getDataFromNode({useTemplateLiteral, shouldReturnPath, testPathMode});
-			testPathMode = TEST_PATH_MODES.ONE_LEVEL;
-			let result = await this.getDataFromNode({useTemplateLiteral, shouldReturnPath, testPathMode});
+			// let result = await this.getDataFromNode({useTemplateLiteral, shouldReturnPath, testPathMode, shouldAddQuery: true});
+			// testPathMode = TEST_PATH_MODES.ONE_LEVEL;
+			// let result = await this.getDataFromNode({useTemplateLiteral, shouldReturnPath, testPathMode});
+			// let result = await this.getDataFromNode({useTemplateLiteral, shouldReturnPath, testPathMode, shouldAddQuery: true});
 			// testPathMode = TEST_PATH_MODES.TWO_LEVELS;
 			// let result = await this.getDataFromNode({useTemplateLiteral, shouldReturnPath, testPathMode});
+			// let result = await this.getDataFromNode({useTemplateLiteral, shouldReturnPath, testPathMode, shouldAddQuery: true});
 			// testPathMode = TEST_PATH_MODES.THREE_LEVELS_MULTI_ATTR;
 			// let result = await this.getDataFromNode({useTemplateLiteral, shouldReturnPath, testPathMode});
+			// let result = await this.getDataFromNode({useTemplateLiteral, shouldReturnPath, testPathMode, shouldAddQuery: true});
 			// testPathMode = TEST_PATH_MODES.THREE_LEVELS_SINGLE_ATTR;
 			// let result = await this.getDataFromNode({useTemplateLiteral, shouldReturnPath, testPathMode});
+			// let result = await this.getDataFromNode({useTemplateLiteral, shouldReturnPath, testPathMode, shouldAddQuery: true});
 
 			// useTemplateLiteral = true;
 
@@ -86,27 +97,37 @@ class MyTest {
 
 			// testPathMode = TEST_PATH_MODES.ROOT;
 			// let result = await this.getDataFromNode({useTemplateLiteral, shouldReturnPath, testPathMode});
+			// let result = await this.getDataFromNode({useTemplateLiteral, shouldReturnPath, testPathMode, shouldAddQuery: true});
 			// testPathMode = TEST_PATH_MODES.ONE_LEVEL;
 			// let result = await this.getDataFromNode({useTemplateLiteral, shouldReturnPath, testPathMode});
+			// let result = await this.getDataFromNode({useTemplateLiteral, shouldReturnPath, testPathMode, shouldAddQuery: true});
 			// testPathMode = TEST_PATH_MODES.TWO_LEVELS;
 			// let result = await this.getDataFromNode({useTemplateLiteral, shouldReturnPath, testPathMode});
+			// let result = await this.getDataFromNode({useTemplateLiteral, shouldReturnPath, testPathMode, shouldAddQuery: true});
 			// testPathMode = TEST_PATH_MODES.THREE_LEVELS_MULTI_ATTR;
 			// let result = await this.getDataFromNode({useTemplateLiteral, shouldReturnPath, testPathMode});
+			// let result = await this.getDataFromNode({useTemplateLiteral, shouldReturnPath, testPathMode, shouldAddQuery: true});
 			// testPathMode = TEST_PATH_MODES.THREE_LEVELS_SINGLE_ATTR;
 			// let result = await this.getDataFromNode({useTemplateLiteral, shouldReturnPath, testPathMode});
+			// let result = await this.getDataFromNode({useTemplateLiteral, shouldReturnPath, testPathMode, shouldAddQuery: true});
 
 			// shouldReturnPath = true;
 
 			// testPathMode = TEST_PATH_MODES.ROOT;
 			// let result = await this.getDataFromNode({useTemplateLiteral, shouldReturnPath, testPathMode});
+			// let result = await this.getDataFromNode({useTemplateLiteral, shouldReturnPath, testPathMode, shouldAddQuery: true});
 			// testPathMode = TEST_PATH_MODES.ONE_LEVEL;
 			// let result = await this.getDataFromNode({useTemplateLiteral, shouldReturnPath, testPathMode});
+			// let result = await this.getDataFromNode({useTemplateLiteral, shouldReturnPath, testPathMode, shouldAddQuery: true});
 			// testPathMode = TEST_PATH_MODES.TWO_LEVELS;
 			// let result = await this.getDataFromNode({useTemplateLiteral, shouldReturnPath, testPathMode});
+			// let result = await this.getDataFromNode({useTemplateLiteral, shouldReturnPath, testPathMode, shouldAddQuery: true});
 			// testPathMode = TEST_PATH_MODES.THREE_LEVELS_MULTI_ATTR;
 			// let result = await this.getDataFromNode({useTemplateLiteral, shouldReturnPath, testPathMode});
+			// let result = await this.getDataFromNode({useTemplateLiteral, shouldReturnPath, testPathMode, shouldAddQuery: true});
 			// testPathMode = TEST_PATH_MODES.THREE_LEVELS_SINGLE_ATTR;
 			// let result = await this.getDataFromNode({useTemplateLiteral, shouldReturnPath, testPathMode});
+			// let result = await this.getDataFromNode({useTemplateLiteral, shouldReturnPath, testPathMode, shouldAddQuery: true});
 
 			// let result = await this.perisistentDataClear();
 			// let result = await this.perisistentDataPut();
@@ -132,7 +153,7 @@ class MyTest {
 	async getDataFromNode(options) {
 		try {
 			options = options || {};
-			const {useTemplateLiteral, shouldReturnPath, testPathMode} = options;
+			const {useTemplateLiteral, shouldReturnPath, testPathMode, shouldAddQuery} = options;
 
 			let g = new Grafiki();
 			let {jajav33Ref} = await this._addData(g);
@@ -140,35 +161,59 @@ class MyTest {
 			let pathQuery;
 			switch (testPathMode) {
 				case TEST_PATH_MODES.ROOT:
-					pathQuery = '/';
-					if (useTemplateLiteral) {
-						pathQuery = '{}';
+				if (useTemplateLiteral) {
+					pathQuery = '{}';
+					if (shouldAddQuery) {
+						pathQuery = `{
+							({first: '*'}): {}
+						}`;
 					}
+				} else {
+					pathQuery = '/';
+					if (shouldAddQuery) {
+						pathQuery = `/({first: '*'})`;
+					}
+				}
 					break;
 				case TEST_PATH_MODES.ONE_LEVEL:
-					pathQuery = '/pets';
 					if (useTemplateLiteral) {
 						pathQuery = `{
 							pets: {}
 						}`;
+						if (shouldAddQuery) {
+							pathQuery = `{
+								pets({first: '*'}): {}
+							}`;
+						}
+					} else {
+						pathQuery = '/pets';
+						if (shouldAddQuery) {
+							pathQuery = `/pets({first: '*'})`;
+						}
 					}
 					break;
 				case TEST_PATH_MODES.TWO_LEVELS:
-					pathQuery = '/pets/doggie';
 					if (useTemplateLiteral) {
 						pathQuery = `{
 							pets: {
 								doggie: {}
 							}
 						}`;
+						if (shouldAddQuery) {
+							pathQuery = `{
+								pets: {
+									doggie({first: '*'}): {}
+								}
+							}`;
+						}
+					} else {
+						pathQuery = '/pets/doggie';
+						if (shouldAddQuery) {
+							pathQuery = `/pets/doggie({first: '*'})`;
+						}
 					}
 					break;
 				case TEST_PATH_MODES.THREE_LEVELS_MULTI_ATTR:
-					pathQuery = [
-						'/pets/doggie/name',
-						'/pets/doggie/age',
-						'/pets/doggie/owners'
-					];
 					if (useTemplateLiteral) {
 						pathQuery = `{
 							pets: {
@@ -179,13 +224,35 @@ class MyTest {
 								}
 							}
 						}`;
+						if (shouldAddQuery) {
+							pathQuery = `{
+								pets: {
+									doggie: {
+										name({if: {'==': 'doggie'}}): {},
+										age({if: {'>': 1}}): {},
+										owners({first: '*'}): {}
+									}
+								}
+							}`;
+						}
+					} else {
+						pathQuery = [
+							'/pets/doggie/name',
+							'/pets/doggie/age',
+							'/pets/doggie/owners'
+						];
+
+						if (shouldAddQuery) {
+							pathQuery = [
+								`/pets/doggie/name({if: {'==': 'doggie'}})`,
+								`/pets/doggie/age({if: {'>': 1}})`,
+								`/pets/doggie/owners({first: '*'})`
+							];
+						}
 					}
 					break;
 				case TEST_PATH_MODES.THREE_LEVELS_SINGLE_ATTR:
 				default:
-					pathQuery = [
-						['/pets/doggie/age'],
-					];
 					if (useTemplateLiteral) {
 						pathQuery = `{
 							pets: {
@@ -194,6 +261,24 @@ class MyTest {
 								}
 							}
 						}`;
+						if (shouldAddQuery) {
+							pathQuery = `{
+								pets: {
+									doggie: {
+										age({if: '<': 10}): {}
+									}
+								}
+							}`;
+						}
+					} else {
+						pathQuery = [
+							['/pets/doggie/age'],
+						];
+						if (shouldAddQuery) {
+							pathQuery = [
+								[`/pets/doggie/age({if: '<': 10})`],
+							];
+						}
 					}
 					break;
 			}
