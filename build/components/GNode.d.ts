@@ -97,6 +97,6 @@ export declare class GNode {
      * @returns {Promise<boolean|undefined|null|number|string|object>}
      * @memberof GNode
      */
-    val(): Promise<boolean | undefined | null | number | string | object>;
+    val(paramQueryStr?: string): Promise<boolean | undefined | null | number | string | object>;
 }
 export {};

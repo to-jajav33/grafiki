@@ -42,6 +42,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var GUID_NODES_1 = require("./GUID_NODES");
 var Utils_1 = require("./Utils");
 var GDataResponse_1 = require("./GDataResponse");
+var GDataQuery_1 = require("./GDataQuery");
 /**
  * Node in the graph system.
  *
@@ -178,7 +179,7 @@ var GNode = /** @class */ (function () {
                     case 3:
                         // now that the new value for the node has been saved, create the branch to activate sorting, and have
                         // reference to the new node.
-                        this.__data.branches[iPropName] = newNode.__data.nodeId;
+                        this.__data.branches[iPropName] = newNode.nodeId;
                         _c.label = 4;
                     case 4:
                         _i++;
@@ -242,7 +243,10 @@ var GNode = /** @class */ (function () {
                         if (!(incomingPathArray.length > 0)) return [3 /*break*/, 3];
                         pathRef = (options || {}).pathRef;
                         firstPathName = incomingPathArray[0], restOfPathsArr = incomingPathArray.slice(1);
-                        branchName = firstPathName;
+                        branchName = firstPathName.replace(/ *\([^)]*\) */g, "");
+                        if (!branchName) {
+                            return [2 /*return*/, currGNode];
+                        }
                         branchNodeId = currGNode.__data.branches ? currGNode.__data.branches[branchName] : undefined;
                         if (!branchNodeId) {
                             // if this has branches, it cannot have value
@@ -291,7 +295,7 @@ var GNode = /** @class */ (function () {
      */
     GNode.prototype.getData = function (pathLiteal) {
         return __awaiter(this, void 0, void 0, function () {
-            var pathsArr, data, rootRef, pathsArrLength, iPath, ref, pathStr, lastPath, currPathArr, pathRef, refOptions, _a, derefData, tempData, response, e_3;
+            var pathsArr, data, rootRef, pathsArrLength, iPath, ref, pathStr, lastPath, currPathArr, lastPathQuery, pathRef, refOptions, _a, derefData, tempData, response, e_3;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
@@ -323,6 +327,7 @@ var GNode = /** @class */ (function () {
                         pathStr = void 0;
                         lastPath = void 0;
                         currPathArr = void 0;
+                        lastPathQuery = void 0;
                         pathRef = rootRef;
                         // convert the incoming path to an array type path.
                         // eslint-disable-next-line
@@ -332,7 +337,8 @@ var GNode = /** @class */ (function () {
                         }
                         currPathArr = Utils_1.Utils.stringPathToArray(pathStr);
                         // lastPath is used for storing data for GDataResponse
-                        lastPath = (currPathArr.length > 0) ? currPathArr[currPathArr.length - 1] : undefined;
+                        lastPathQuery = (currPathArr.length > 0) ? currPathArr[currPathArr.length - 1] : '/';
+                        lastPath = (currPathArr.length > 0) ? lastPathQuery.replace(/ *\([^)]*\) */g, "") : '';
                         refOptions = { pathRef: pathRef };
                         if (!(currPathArr.length > 0)) return [3 /*break*/, 3];
                         return [4 /*yield*/, this.ref(currPathArr, refOptions)];
@@ -345,7 +351,7 @@ var GNode = /** @class */ (function () {
                     case 4:
                         // get the last ref, and refOptions.pathRef will change to the second to last path.
                         ref = _a;
-                        return [4 /*yield*/, ref.val()];
+                        return [4 /*yield*/, ref.val(currPathArr[currPathArr.length - 1] || '')];
                     case 5:
                         data = _b.sent();
                         derefData = (data && typeof data === 'object') ? JSON.parse(JSON.stringify(data)) : data;
@@ -395,51 +401,21 @@ var GNode = /** @class */ (function () {
      * @returns {Promise<boolean|undefined|null|number|string|object>}
      * @memberof GNode
      */
-    GNode.prototype.val = function () {
+    GNode.prototype.val = function (paramQueryStr) {
         return __awaiter(this, void 0, void 0, function () {
-            var outObj, iPropName;
+            var gdataQuery, e_4;
             return __generator(this, function (_a) {
-                try {
-                    if ((this.data.value === undefined || this.data.value === null) && (Object.keys(this.data.branches).length > 0)) {
-                        outObj = {};
-                        /** @todo add no levels when we add queries. Queries will be a parameter that is passed in and determines what to return
-                        * for now we just need to see the same level values */
-                        // no levels into branches, must query for each individual branch.
-                        // ... return just the keys
-                        // same level branches
-                        for (iPropName in this.data.branches) {
-                            outObj[iPropName] = null;
-                        }
-                        // or return just the keys
-                        // outObj = Object.keys(this.data.branches);
-                        // one levels into branches
-                        // for (let iPropName in this.data.branches) {
-                        // 	let branchNodeId = this.data.branches[iPropName];
-                        // 	let gNodeToGetValFrom = this.root.worldNet.gNodes[branchNodeId];
-                        // 	let value;
-                        // 	// with persistent data, the gnode might not exists yet
-                        // 	if (!gNodeToGetValFrom) {
-                        // 		gNodeToGetValFrom = this.root.newNode(branchNodeId);
-                        // 	}
-                        // 	// only get values in the first level of the object... going deeper can lead to
-                        // 	// infinite loops from circular references.
-                        // 	// null is considered a type object
-                        // 	value = gNodeToGetValFrom.data.value;
-                        // 	if ((Object.keys(gNodeToGetValFrom.data.branches).length > 0) && ((value === undefined) || (value === null))) {
-                        // 		value = JSON.parse(JSON.stringify(gNodeToGetValFrom.data.branches));
-                        // 	}
-                        // 	outObj[iPropName] = value;
-                        // }
-                        return [2 /*return*/, outObj];
-                    }
-                    else {
-                        return [2 /*return*/, this.data.value];
-                    }
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        gdataQuery = new GDataQuery_1.GDataQuery();
+                        return [4 /*yield*/, gdataQuery.query(paramQueryStr, this.data)];
+                    case 1: return [2 /*return*/, _a.sent()];
+                    case 2:
+                        e_4 = _a.sent();
+                        throw e_4;
+                    case 3: return [2 /*return*/];
                 }
-                catch (e) {
-                    throw e;
-                }
-                return [2 /*return*/];
             });
         });
     };
