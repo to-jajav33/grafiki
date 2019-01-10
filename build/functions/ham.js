@@ -43,3 +43,4 @@ function ham(machineState, incomingState, currentState, incomingValue, currentVa
     return { err: "Invalid CRDT Data: " + incomingValue + " to " + currentValue + " at " + incomingState + " to " + currentState + "!" };
 }
 exports.ham = ham;
+//# sourceMappingURL=ham.js.map

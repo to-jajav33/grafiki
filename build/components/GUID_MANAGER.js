@@ -76,3 +76,4 @@ var GUID_MANAGER = /** @class */ (function () {
     return GUID_MANAGER;
 }());
 exports.GUID_MANAGER = GUID_MANAGER;
+//# sourceMappingURL=GUID_MANAGER.js.map

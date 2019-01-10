@@ -119,3 +119,4 @@ var GNodeRoot = /** @class */ (function (_super) {
     return GNodeRoot;
 }(GNode_1.GNode));
 exports.GNodeRoot = GNodeRoot;
+//# sourceMappingURL=GNodeRoot.js.map

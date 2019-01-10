@@ -28,3 +28,4 @@ var GDataResponse = /** @class */ (function () {
     return GDataResponse;
 }());
 exports.GDataResponse = GDataResponse;
+//# sourceMappingURL=GDataResponse.js.map
