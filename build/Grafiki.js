@@ -11,7 +11,6 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var GNodeRoot_1 = require("./components/GNodeRoot");
-var MyWebSocket = require("ws");
 var Grafiki = /** @class */ (function (_super) {
     __extends(Grafiki, _super);
     function Grafiki(paramOptions) {
@@ -29,20 +28,18 @@ var Grafiki = /** @class */ (function (_super) {
         return _this;
     }
     Grafiki.prototype.__init = function () {
-        if (this.__wsServer)
-            return;
-        var port = this.__grafikiOptions.port;
-        try {
-            if (port) {
-                this.__onConnection = this.__onConnection.bind(this);
-                this.__onMessage = this.__onMessage.bind(this);
-                this.__wsServer = new MyWebSocket.Server({ port: port });
-                this.__wsServer.on('connection', this.__onConnection);
-            }
-        }
-        catch (e) {
-            return e;
-        }
+        // if (this.__wsServer) return;
+        // let port : number = this.__grafikiOptions.port;
+        // try {
+        // 	if (port) {
+        // 		this.__onConnection = this.__onConnection.bind(this);
+        // 		this.__onMessage = this.__onMessage.bind(this);
+        // 		this.__wsServer = new MyWebSocket.Server({port});
+        // 		this.__wsServer.on('connection', this.__onConnection);
+        // 	}
+        // } catch (e) {
+        // 	return e;
+        // }
     };
     /**
      * Listern for then server connectss.
