@@ -67,3 +67,4 @@ var Grafiki = /** @class */ (function (_super) {
     return Grafiki;
 }(GNodeRoot_1.GNodeRoot));
 exports.Grafiki = Grafiki;
+//# sourceMappingURL=Grafiki.js.map

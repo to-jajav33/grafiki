@@ -6,3 +6,4 @@ var GData = /** @class */ (function () {
     return GData;
 }());
 exports.GData = GData;
+//# sourceMappingURL=GData.js.map

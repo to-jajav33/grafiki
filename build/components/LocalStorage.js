@@ -34,3 +34,4 @@ function createLocalStorage(options) {
     throw new Error("Unknown mode:" + actualMode);
 }
 exports.createLocalStorage = createLocalStorage;
+//# sourceMappingURL=LocalStorage.js.map

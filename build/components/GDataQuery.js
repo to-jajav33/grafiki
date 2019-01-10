@@ -196,3 +196,4 @@ var GDataQuery = /** @class */ (function () {
     return GDataQuery;
 }());
 exports.GDataQuery = GDataQuery;
+//# sourceMappingURL=GDataQuery.js.map
