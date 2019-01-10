@@ -1,7 +1,7 @@
 
 import { GNodeRoot, IGNodeRootOptions } from "./components/GNodeRoot";
-import * as MyWebSocket from 'ws';
 import { IGNodeOptions } from "./components/GNode";
+// import * as MyWebSocket from 'ws';
 
 export interface IGrafikiParams {
 	port ?: number,
@@ -15,7 +15,7 @@ interface IGrafikiOptions {
 
 
 export class Grafiki extends GNodeRoot {
-	private __wsServer : MyWebSocket.Server;
+	// private __wsServer : MyWebSocket.Server;
 	protected __grafikiOptions : IGrafikiOptions
 
 	constructor (paramOptions : IGrafikiParams = {nodeOptions : {root: undefined}}) {
@@ -34,22 +34,22 @@ export class Grafiki extends GNodeRoot {
 	}
 
 	private __init () {
-		if (this.__wsServer) return;
+		// if (this.__wsServer) return;
 
-		let port : number = this.__grafikiOptions.port;
+		// let port : number = this.__grafikiOptions.port;
 
-		try {
-			if (port) {
-				this.__onConnection = this.__onConnection.bind(this);
-				this.__onMessage = this.__onMessage.bind(this);
+		// try {
+		// 	if (port) {
+		// 		this.__onConnection = this.__onConnection.bind(this);
+		// 		this.__onMessage = this.__onMessage.bind(this);
 
-				this.__wsServer = new MyWebSocket.Server({port});
+		// 		this.__wsServer = new MyWebSocket.Server({port});
 	
-				this.__wsServer.on('connection', this.__onConnection);
-			}
-		} catch (e) {
-			return e;
-		}
+		// 		this.__wsServer.on('connection', this.__onConnection);
+		// 	}
+		// } catch (e) {
+		// 	return e;
+		// }
 	}
 
 	/**
