@@ -9,7 +9,6 @@ interface IGrafikiOptions {
     port: number;
 }
 export declare class Grafiki extends GNodeRoot {
-    private __wsServer;
     protected __grafikiOptions: IGrafikiOptions;
     constructor(paramOptions?: IGrafikiParams);
     private __init;
