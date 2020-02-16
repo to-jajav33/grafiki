@@ -1,6 +1,11 @@
 import { GNode, IGNodeData, IGNodeOptions } from "./GNode";
 export interface IGNodeRootOptions {
-    localStoragePath: string;
+    localStoragePath?: string;
+    data?: IPersistentData;
+}
+interface IPersistentData {
+    root: string;
+    jsonNodes: object;
 }
 interface IGNodeRootParams {
     nodeOptions: IGNodeOptions;
