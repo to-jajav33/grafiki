@@ -1,8 +1,11 @@
 "use strict";
 var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -19,7 +22,7 @@ var GNodeRoot = /** @class */ (function (_super) {
         var _this = this;
         var nodeOptions = (params) ? params.nodeOptions : undefined;
         var rootOptions = params ? params.rootOptions || {} : {};
-        var localStoragePath = rootOptions.localStoragePath;
+        var localStoragePath = rootOptions.localStoragePath, data = rootOptions.data;
         var isPersistent = !!localStoragePath;
         if (isPersistent && localStoragePath.startsWith('/')) {
             localStoragePath = '.' + localStoragePath;
@@ -38,11 +41,15 @@ var GNodeRoot = /** @class */ (function (_super) {
                 nodeOptions.data = persistentData.jsonNodes[persistentData.root];
             }
         }
+        else if (data) {
+            nodeOptions.data = data.jsonNodes[data.root];
+        }
         _this = _super.call(this, nodeOptions) || this;
         _this.__localStorage = localStorageInst;
         _this.__localStoragePath = localStoragePath;
         _this.__isPersistent = !!localStoragePath;
-        _this.__initWorldNet(); // initialize worldnet
+        var initJsonNodes = (!isPersistent && data.jsonNodes) ? data.jsonNodes : undefined;
+        _this.__initWorldNet(initJsonNodes); // initialize worldnet
         // save this root node to the world net
         _this.__worldNet.jsonNodes[_this.data.nodeId] = _this.data;
         _this.__worldNet.gNodes[_this.data.nodeId] = _this;
@@ -61,10 +68,10 @@ var GNodeRoot = /** @class */ (function (_super) {
         enumerable: true,
         configurable: true
     });
-    GNodeRoot.prototype.__initWorldNet = function () {
+    GNodeRoot.prototype.__initWorldNet = function (paramInitObj) {
         if (!this.__worldNet) {
             this.__worldNet = {
-                jsonNodes: {},
+                jsonNodes: paramInitObj ? paramInitObj : {},
                 gNodes: {}
             };
             if (this.__isPersistent) {
