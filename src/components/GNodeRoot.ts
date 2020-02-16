@@ -4,7 +4,8 @@ import { createLocalStorage, ILocalStorage } from "./LocalStorage";
 const KEY_PATH_ROOT = '##grafiki##';
 
 export interface IGNodeRootOptions {
-	localStoragePath : string
+	localStoragePath ?: string,
+	init ?: IPersistentData
 }
 
 interface IPersistentData {
@@ -47,7 +48,7 @@ export class GNodeRoot extends GNode {
 	constructor (params : IGNodeRootParams) {
 		const nodeOptions : IGNodeOptions = (params) ? params.nodeOptions : undefined;
 		const rootOptions : IGNodeRootOptions = params ? params.rootOptions || {} as IGNodeRootOptions : {} as IGNodeRootOptions;
-		let {localStoragePath} = rootOptions;
+		let {localStoragePath, init} = rootOptions;
 
 		const isPersistent = !!localStoragePath;
 		if (isPersistent && localStoragePath.startsWith('/')) {
@@ -68,6 +69,8 @@ export class GNodeRoot extends GNode {
 				// pass this data to the GNode constructor.
 				nodeOptions.data = persistentData.jsonNodes[persistentData.root];
 			}
+		} else if (init) {
+			nodeOptions.data = init.jsonNodes[init.root];
 		}
 
 		super(nodeOptions);
@@ -75,18 +78,19 @@ export class GNodeRoot extends GNode {
 		this.__localStorage = localStorageInst;
 		this.__localStoragePath = localStoragePath;
 		this.__isPersistent = !!localStoragePath;
-		
-		this.__initWorldNet(); // initialize worldnet
+
+		let initJsonNodes = (!isPersistent && init.jsonNodes) ? init.jsonNodes : undefined;
+		this.__initWorldNet(initJsonNodes); // initialize worldnet
 
 		// save this root node to the world net
 		this.__worldNet.jsonNodes[this.data.nodeId] = this.data;
 		this.__worldNet.gNodes[this.data.nodeId] = this;
 	}
 
-	private __initWorldNet () {
+	private __initWorldNet (paramInitObj ?: object) {
 		if (!this.__worldNet) {
 			this.__worldNet = {
-				jsonNodes: {},
+				jsonNodes: paramInitObj ? paramInitObj : {},
 				gNodes: {}
 			};
 

@@ -46,6 +46,7 @@ class MyTest {
 	async runTests() {
 		try {
 			// let result = await this.testInitGrafiki();
+			let result = await this.testInitGrafikiWithData();
 			// let result = await this.getInNode();
 			// let result = await this.putInNode();
 
@@ -66,8 +67,8 @@ class MyTest {
 			// testPathMode = TEST_PATH_MODES.TWO_LEVELS;
 			// let result = await this.getDataFromNode({useTemplateLiteral, shouldReturnPath, testPathMode});
 			// let result = await this.getDataFromNode({useTemplateLiteral, shouldReturnPath, testPathMode, shouldAddQuery: true});
-			testPathMode = TEST_PATH_MODES.THREE_LEVELS_MULTI_ATTR;
-			let result = await this.getDataFromNode({useTemplateLiteral, shouldReturnPath, testPathMode});
+			// testPathMode = TEST_PATH_MODES.THREE_LEVELS_MULTI_ATTR;
+			// let result = await this.getDataFromNode({useTemplateLiteral, shouldReturnPath, testPathMode});
 			// let result = await this.getDataFromNode({useTemplateLiteral, shouldReturnPath, testPathMode, shouldAddQuery: true});
 			// testPathMode = TEST_PATH_MODES.THREE_LEVELS_SINGLE_ATTR;
 			// let result = await this.getDataFromNode({useTemplateLiteral, shouldReturnPath, testPathMode});
@@ -148,6 +149,30 @@ class MyTest {
 
 	async testInitGrafiki() {
 		return new Grafiki();
+	}
+
+	async testInitGrafikiWithData() {
+		return new Grafiki({
+			rootOptions : {
+				init: {
+					root: '123',
+					jsonNodes: {
+						'123': {
+							branches: ['456'],
+							nodeId: '123',
+							value: undefined,
+							timestamp: '0192008',
+						},
+						'456': {
+							branches: ['456'],
+							nodeId: '123',
+							value: 10,
+							timestamp: '0192009',
+						}
+					}
+				}
+			}
+		});
 	}
 
 	async getDataFromNode(options) {
