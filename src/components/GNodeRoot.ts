@@ -79,7 +79,7 @@ export class GNodeRoot extends GNode {
 		this.__localStoragePath = localStoragePath;
 		this.__isPersistent = !!localStoragePath;
 
-		let initJsonNodes = (!isPersistent && worldData.jsonNodes) ? worldData.jsonNodes : undefined;
+		let initJsonNodes = (!isPersistent && worldData && worldData.jsonNodes) ? worldData.jsonNodes : undefined;
 		this.__initWorldNet(initJsonNodes); // initialize worldnet
 
 		// save this root node to the world net
