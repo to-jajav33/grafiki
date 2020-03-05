@@ -154,7 +154,7 @@ class MyTest {
 	async testInitGrafikiWithData() {
 		return new Grafiki({
 			rootOptions : {
-				init: {
+				worldData: {
 					root: '123',
 					jsonNodes: {
 						'123': {
