@@ -1,11 +1,8 @@
 "use strict";
 var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -22,7 +19,7 @@ var GNodeRoot = /** @class */ (function (_super) {
         var _this = this;
         var nodeOptions = (params) ? params.nodeOptions : undefined;
         var rootOptions = params ? params.rootOptions || {} : {};
-        var localStoragePath = rootOptions.localStoragePath, data = rootOptions.data;
+        var localStoragePath = rootOptions.localStoragePath, worldData = rootOptions.worldData;
         var isPersistent = !!localStoragePath;
         if (isPersistent && localStoragePath.startsWith('/')) {
             localStoragePath = '.' + localStoragePath;
@@ -41,14 +38,14 @@ var GNodeRoot = /** @class */ (function (_super) {
                 nodeOptions.data = persistentData.jsonNodes[persistentData.root];
             }
         }
-        else if (data) {
-            nodeOptions.data = data.jsonNodes[data.root];
+        else if (worldData && worldData.jsonNodes && worldData.root) {
+            nodeOptions.data = worldData.jsonNodes[worldData.root];
         }
         _this = _super.call(this, nodeOptions) || this;
         _this.__localStorage = localStorageInst;
         _this.__localStoragePath = localStoragePath;
         _this.__isPersistent = !!localStoragePath;
-        var initJsonNodes = (!isPersistent && data.jsonNodes) ? data.jsonNodes : undefined;
+        var initJsonNodes = (!isPersistent && worldData.jsonNodes) ? worldData.jsonNodes : undefined;
         _this.__initWorldNet(initJsonNodes); // initialize worldnet
         // save this root node to the world net
         _this.__worldNet.jsonNodes[_this.data.nodeId] = _this.data;
