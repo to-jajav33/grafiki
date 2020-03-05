@@ -45,7 +45,7 @@ var GNodeRoot = /** @class */ (function (_super) {
         _this.__localStorage = localStorageInst;
         _this.__localStoragePath = localStoragePath;
         _this.__isPersistent = !!localStoragePath;
-        var initJsonNodes = (!isPersistent && worldData.jsonNodes) ? worldData.jsonNodes : undefined;
+        var initJsonNodes = (!isPersistent && worldData && worldData.jsonNodes) ? worldData.jsonNodes : undefined;
         _this.__initWorldNet(initJsonNodes); // initialize worldnet
         // save this root node to the world net
         _this.__worldNet.jsonNodes[_this.data.nodeId] = _this.data;
